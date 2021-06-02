@@ -1,5 +1,7 @@
-# Function to save a number of meta objects. 
-
+# Function to save a number of meta objects.
+# meta objects for each miRNA polymorphism (e.g. miR.146a) are like (miR.146a.{name of model} or miR.146a.{subgroup})
+# This function is useful for concatenating, formatting and saving a large number of meta objects
+# (combination of various SNPs, subgroups, and/or models) 
 meta.save <- function(vec1, vec2 = c("Homo", "Hetro", "Dom", "Rec", "All"), filename = "df.txt"){
   require(dplyr)
  # vec1 is the vector of meta objects e.g. c("miR.146a", "miR.196a.ov")  
@@ -7,8 +9,9 @@ meta.save <- function(vec1, vec2 = c("Homo", "Hetro", "Dom", "Rec", "All"), file
   
   df <- data.frame(nStudies=NA, OR.FE=NA, OR.FE.L=NA, OR.FE.U=NA, Pz.FE=NA, OR.RE=NA, OR.RE.L=NA, OR.RE.U=NA, Pz.RE=NA, I2=NA, I2.L=NA, I2.U=NA,  Tau=NA, Phet= NA)
   
-  #with envir argument, mget() will look for the objects in the chunk environment. By default it looks in globalenv.
-  #this is usefull for sourcing and implenting save.meta() in Rmarkdown.
+  # with envir argument, mget() will look for the objects in the chunk environment. 
+  # By default it looks in globalenv.
+  # this is useful for sourcing and implementing save.meta() in Rmarkdown.
   obj <- mget(apply(expand.grid(vec1, vec2), 1, paste, collapse ="."), envir = knitr::knit_global())
 
   for (i in 1:length(obj)){
