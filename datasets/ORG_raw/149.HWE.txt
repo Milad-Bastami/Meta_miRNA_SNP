@@ -1,0 +1,24 @@
+        Study  ORG           95% LL         95% UL
+           1  0.7464527      0.5407312       1.030441    
+           2  0.9503615      0.6829351       1.322508    
+           3  0.7471436      0.5916693      0.9434723    
+           4   1.016900      0.8727469       1.184863    
+  
+ ***META-ANALYSIS RESULTS***
+  
+ Heterogeneity metrics
+ Q=        6.282011     P-value for Q=  9.8668039E-02
+  
+ I^2(%)=   52.24459    
+  
+ Fixed Effects model
+  
+ ORG=              0.9057065    
+ 95% Lower Limit=  0.8098678    
+ 95% Upper Limit=   1.012887    
+  
+ Random Effects model
+  
+ ORG=              0.8725693    
+ 95% Lower Limit=  0.7299311    
+ 95% Upper Limit=   1.043081    
