@@ -26,9 +26,9 @@ The following chunk process all ORG raw files within `/datasets/ORG_raw/` folder
 [[ ! -d $PWD/datasets/ORG_cleaned  ]] && mkdir $PWD/datasets/ORG_cleaned && cp $PWD/datasets/ORG_raw/*.txt $PWD/datasets/ORG_cleaned
 
 for f in $PWD/datasets/ORG_cleaned/*.txt; do
-    sed -n -f '/Study/,/META-ANALYSIS/p' $f
-    sed -f '1d' $f             # remove the first line (i.e. header)
-    sed -f 's/ \+ /\t/g' "$f"  # convert trailing spaces to a tab, but leave individual spaces intact
+    sed -n -i '/Study/,/META-ANALYSIS/p' $f
+    sed -i '1d' $f             # remove the first line (i.e. header)
+    sed -i 's/ \+ /\t/g' "$f"  # convert trailing spaces to a tab, but leave individual spaces intact
     cut -f 2-5 $f >"tmpfile" && mv tmpfile "$f" # remove the first (1) and the last (6) empty column (i.e. tab)
     head -n -2 $f > 'tmpfile' && mv tmpfile "$f"       # remove the last 2 lines
 done
@@ -92,6 +92,19 @@ for (i in 1:length(ORGs)){
   dev.off()
 }
 ```
+
+if influence plots (in tiff format) are present in the current directory (i.e. `$PWD`), remove previous inf plots and move new plot to the corresponding directory.
+
+```{bash}
+## if directory does not exist create it & move files
+mkdir $PWD/infplots && mv $(find $PWD/*.tiff) $PWD/infplots && echo "influence plots moved to infplot directory"
+
+## if directory is already there, find files and move them
+find *.tiff 2>&1 1> /dev/null
+found=$? ##infplots identified?
+[[ found ]] && rm -f $PWD/infplots/*.tiff && mv $(find $PWD/*.tiff) $PWD/infplots && echo "influence plots moved to infplot directory"
+```
+
 
 
 
