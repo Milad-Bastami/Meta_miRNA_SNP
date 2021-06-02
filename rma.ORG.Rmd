@@ -7,13 +7,33 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
-Transform ORGs (Generalized Odds Ratios) and 95%CI to log ORG (yi) and standard errors (sei). 
+## Introduction
+Transforming ORGs (Generalized Odds Ratios) and 95%CI to log ORG (yi) and standard errors (sei). 
 These values can be used with the metafor package to plot data
 
 
 ```{r}
-
+library(readr)
+library(metafor)
 ```
+
+## Processing ORG files
+Meta-analysis of various miRNA polymorphisms has been performed using generalized odds ratio (i.e. ORG). Fixed-effects (FE) and random-effects (RE) ORG meta-analysis for different groups and subgroups have been performed using the provided software for ORG. Each file in the datasets/ORG_raw folder represents the FE & RE models for a single miRNA/subgroup. here, the files are processed and results are concatenatedfor further analysis and ploting.
+
+## Computing yi & sei from ORGs
+
+```{r}
+ORG_all <- read_delim("./datasets/ORG.all.txt", 
+                      "\t", escape_double = FALSE, col_names = FALSE, 
+                      col_types = cols(X1 = col_skip()), trim_ws = TRUE)
+
+colnames(ORG_all) <- c("ORG", "ci.lb", 'ci.ub', "name")
+
+ORG_all <- within(ORG_all, {
+            yi <- log(ORG)
+            sei <- (log(ci.ub) - log(ci.lb))/(2*1.96)
+})
+```
+
 
 
