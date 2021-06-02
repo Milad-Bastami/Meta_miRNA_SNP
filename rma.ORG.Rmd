@@ -28,17 +28,19 @@ cat $PWD/datasets/ORG_raw/146a.African.txt
 The following chunk process all ORG raw files within `/datasets/ORG_raw/` folder, removes unnecessary parts and concatenate all files together in a single file and also add the name of each file (i.e. the analysis) as a column to keep track of different analysis performed.
 
 ```{bash}
-for f in $PWD/datasets/ORG_raw/*.txt; do
+[[ ! -d $PWD/datasets/ORG_cleaned  ]] && mkdir $PWD/datasets/ORG_cleaned && cp $PWD/datasets/ORG_raw/*.txt $PWD/datasets/ORG_cleaned
+
+for f in $PWD/datasets/ORG_cleaned/*.txt; do
     sed -n -f '/Study/,/META-ANALYSIS/p' $f
     sed -f '1d' $f             # remove the first line (i.e. header)
     sed -f 's/ \+ /\t/g' "$f"  # convert trailing spaces to a tab, but leave individual spaces intact
     cut -f 2-5 $f >"tmpfile" && mv tmpfile "$f" # remove the first (1) and the last (6) empty column (i.e. tab)
-    head -n -2 $f > 'tmpfile' && mv tmpfile $f       # remove the last 2 lines
+    head -n -2 $f > 'tmpfile' && mv tmpfile "$f"       # remove the last 2 lines
 done
 
 ## add base filename to the end of each file & concatenate them together
 ### (split is an awk function)
-awk 'BEGIN {FS = "\t"; OFS="\t"} {idx = split(FILENAME, parts, "/"); print $0, parts[idx]}' $PWD/datasets/ORG_raw/*.txt > $PWD/ORG_all.txt
+awk 'BEGIN {FS = "\t"; OFS="\t"} {idx = split(FILENAME, parts, "/"); print $0, parts[idx]}' $PWD/datasets/ORG_cleaned/*.txt > $PWD/datasets/ORG_all.txt
 ```
 
 ## Computing yi & sei from ORGs
