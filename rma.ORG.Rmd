@@ -1,16 +1,11 @@
 ---
-title: "ama.ORG"
+title: "rama.ORG"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
-## Introduction
-Transforming ORGs (Generalized Odds Ratios) and 95%CI to log ORG (yi) and standard errors (sei). 
-These values can be used with the metafor package to plot data
-
 
 ```{r}
 library(readr)
@@ -44,6 +39,8 @@ awk 'BEGIN {FS = "\t"; OFS="\t"} {idx = split(FILENAME, parts, "/"); print $0, p
 ```
 
 ## Computing yi & sei from ORGs
+Transforming ORGs (Generalized Odds Ratios) and 95%CI to log ORG (yi) and standard errors (sei). 
+These values can be used with the metafor package to plot data
 
 ```{r}
 ORG_all <- read_delim("./datasets/ORG_all.txt", 
