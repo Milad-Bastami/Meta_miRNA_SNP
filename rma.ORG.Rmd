@@ -1,0 +1,19 @@
+---
+title: "ama.ORG"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+Transform ORGs (Generalized Odds Ratios) and 95%CI to log ORG (yi) and standard errors (sei). 
+These values can be used with the metafor package to plot data
+
+
+```{r}
+
+```
+
+
