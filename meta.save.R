@@ -2,9 +2,8 @@
 
 meta.save <- function(vec1, vec2 = c("Homo", "Hetro", "Dom", "Rec", "All"), filename = "df.txt"){
   require(dplyr)
-# vec1 is the vector of meta objects like c("miR.146a", "miR.196a.ov")  
-# vec2 is the cevtor of genetic models or subgroups
-  
+ # vec1 is the vector of meta objects e.g. c("miR.146a", "miR.196a.ov")  
+ # vec2 is the vector of genetic models or subgroups
   
   df <- data.frame(nStudies=NA, OR.FE=NA, OR.FE.L=NA, OR.FE.U=NA, Pz.FE=NA, OR.RE=NA, OR.RE.L=NA, OR.RE.U=NA, Pz.RE=NA, I2=NA, I2.L=NA, I2.U=NA,  Tau=NA, Phet= NA)
   
