@@ -17,8 +17,29 @@ library(readr)
 library(metafor)
 ```
 
-## Processing ORG files
-Meta-analysis of various miRNA polymorphisms has been performed using generalized odds ratio (i.e. ORG). Fixed-effects (FE) and random-effects (RE) ORG meta-analysis for different groups and subgroups have been performed using the provided software for ORG. Each file in the datasets/ORG_raw folder represents the FE & RE models for a single miRNA/subgroup. here, the files are processed and results are concatenatedfor further analysis and ploting.
+## Processing individual ORG files
+Meta-analysis of various miRNA polymorphisms has been performed using generalized odds ratio (i.e. ORG). Fixed-effects (FE) and random-effects (RE) ORG meta-analysis for different groups and subgroups have been performed using the provided software for ORG. Each file in the datasets/ORG_raw folder represents the FE & RE models for a single miRNA/subgroup. here, the files are processed and results are concatenated for further analysis and plotting.  
+FE & RE data lie between 'Study' and '***META-ANALYSIS***'
+
+```{bash}
+cat $PWD/datasets/ORG_raw/146a.African.txt
+```
+
+The following chunk process all ORG raw files within `/datasets/ORG_raw/` folder
+```{bash}
+for i in $PWD/datasets/ORG_raw/*.txt; do
+sed -n -i '/Study/,/META-ANALYSIS/p' $i
+sed -i '1d' $i                         # remove the first line
+sed -i 's/ \+ /\t/g' "$i"  # convert trailing spaces to a tab, but leave individual spaces untact
+cut -f 2-5 $i >"tmpfile" && mv tmpfile "$i" # remove the first (1) and the last (6) empty colum (tab)
+head -n -2 $i >"./t/M-${i}"                 # remove the last 2 lines
+done
+
+## add base filename to the end of each file
+### split is an awk function
+awk 'BEGIN {FS = "\t"; OFS="\t"} {idx = split(FILENAME, parts, "/"); print $0, parts[idx]}' /mnt/e/test/*.txt
+```
+
 
 ## Computing yi & sei from ORGs
 
