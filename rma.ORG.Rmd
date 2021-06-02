@@ -38,7 +38,7 @@ done
 
 ## add base filename to the end of each file & concatenate them together
 ### (split is an awk function)
-awk 'BEGIN {FS = "\t"; OFS="\t"} {idx = split(FILENAME, parts, "/"); print $0, parts[idx]}' $PWD/datasets/ORG_raw/*.txt > ../ ORG_all.txt
+awk 'BEGIN {FS = "\t"; OFS="\t"} {idx = split(FILENAME, parts, "/"); print $0, parts[idx]}' $PWD/datasets/ORG_raw/*.txt > $PWD/ORG_all.txt
 ```
 
 ## Computing yi & sei from ORGs
@@ -54,7 +54,46 @@ ORG_all <- within(ORG_all, {
             yi <- log(ORG)
             sei <- (log(ci.ub) - log(ci.lb))/(2*1.96)
 })
+
+head(ORG_all)
 ```
+
+## rma.ORG function
+takes a dataframe (df) containing the yi and sei and names of groups (miR)
+and returns a list of rma object.
+
+```{r}
+rma.ORG <- function(df, miR){
+  require(metafor)
+  df[[miR]] <- factor(df[[miR]])
+  groups <- levels(df[[miR]])
+  rma.ORG <- list()
+  for (i in 1:length(groups)) {
+    dataF <- df[df[[miR]] == groups[i],]
+    rma.element <- rma(yi = dataF$yi , sei = dataF$sei, slab = 1:nrow(dataF), method = "DL", data = dataF, test = "z", measure = "OR")
+    rma.ORG[[i]] <- rma.element
+    names(rma.ORG)[i] <- groups[i]
+  }
+ return(rma.ORG) 
+}
+
+ORGs <- rma.ORG(ORG_all, "name")
+```
+
+## perorming influence analysis on ORGs
+This chunk performs influence analysis for `rma.ORG` objects stored in `ORGs` and produces appropriate influence plots.
+```{r}
+for (i in 1:length(ORGs)){
+  object <- influence(ORGs[[i]])
+  assign(paste0(names(ORGs)[i],"-inf"), object)
+  
+  tiff(paste0(names(ORGs)[i], "-inf.tiff"), width = dev.size()[1], height =  dev.size()[2], units = 'in', res = 400)
+  cairo_pdf(filename = paste0(names(ORGs)[i], "-inf.tiff"), onefile = TRUE, width=5.4,height=7.5, family = "sans", fallback_resolution = 1000)
+  plot.infl.rma.uni(influence(ORGs[[i]]))
+  dev.off()
+}
+```
+
 
 
 
